@@ -1,0 +1,18 @@
+import streamlit as st
+from app.rag import get_rag_chain
+from app.agent import get_agent_executor
+
+st.set_page_config(page_title="ECK AI", page_icon="🚀")
+st.title("East Coast Kreations Enterprise AI")
+st.caption("RAG + Autonomous Agents | Virginia LLC")
+
+question = st.text_input("Ask your question:")
+if st.button("Send") and question:
+    with st.spinner("Thinking..."):
+        rag = get_rag_chain().invoke(question)
+        agent = get_agent_executor().invoke({"messages": [{"role": "user", "content": question}]})
+        
+        st.subheader("📚 RAG Answer")
+        st.write(rag)
+        st.subheader("🤖 Agent Answer")
+        st.write(agent["messages"][-1].content)
